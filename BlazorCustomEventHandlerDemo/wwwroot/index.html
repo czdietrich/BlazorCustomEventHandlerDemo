@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>TestCustomEventsInBlazor</title>
+    <base href="/" />
+</head>
+
+<body>
+    <div>
+        <script>
+            class MyElement extends HTMLElement {
+
+                constructor() {
+                    super()
+
+                    const shadow = this.attachShadow({ mode: 'open' })
+                    const content = document.createElement('button')
+
+                    content.innerText = 'CLICK ME'
+
+                    content.addEventListener('click', () => {
+                        const event = new CustomEvent('my-event', {
+                            detail: 'some data',
+                            bubbles: true // necessary for Blazor
+                        })
+
+                        this.dispatchEvent(event)
+                    })
+
+                    shadow.appendChild(content)
+                }
+            }
+
+            customElements.define('my-element', MyElement)
+
+        </script>
+    </div>
+
+    <div id="app">Loading...</div>
+
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        function eventArgsCreator(event) {
+            return {
+                value: event.detail
+            };
+        }
+
+        Blazor.registerCustomEventType('my-event', {
+            createEventArgs: eventArgsCreator
+        })
+    </script>
+</body>
+
+</html>

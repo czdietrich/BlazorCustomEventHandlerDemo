@@ -1,0 +1,14 @@
+﻿@page "/"
+
+<my-element @onmy-event="Callback" />
+<div>count: @_clickCount</div>
+
+@code
+{
+    private int _clickCount;
+
+    private void Callback( MyEventArgs e )
+    {
+        _clickCount++;
+    }
+}
